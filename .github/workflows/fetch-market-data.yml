@@ -3,9 +3,9 @@ name: Fetch Market Data
 on:
   schedule:
     # Runs every 5 minutes during market hours (Mon-Fri 13:30-20:00 UTC = 9:30am-4pm ET)
-    - cron: '*/5 13-20 * * 1-5'
+    - cron: '*/30 13-20 * * 1-5'
     # Also runs every 15 minutes outside market hours to keep data fresh
-    - cron: '*/15 * * * *'
+    - cron: '0 */1 * * *'
   workflow_dispatch: # Allow manual trigger
 
 permissions:
