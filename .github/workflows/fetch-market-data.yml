@@ -1,0 +1,37 @@
+name: Fetch Market Data
+
+on:
+  schedule:
+    # Runs every 5 minutes during market hours (Mon-Fri 13:30-20:00 UTC = 9:30am-4pm ET)
+    - cron: '*/5 13-20 * * 1-5'
+    # Also runs every 15 minutes outside market hours to keep data fresh
+    - cron: '*/15 * * * *'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Fetch market data
+        run: python fetch_market_data.py
+
+      - name: Commit and push data
+        run: |
+          git config --global user.name 'nexus-bot'
+          git config --global user.email 'nexus-bot@users.noreply.github.com'
+          git add market.json
+          git diff --staged --quiet || git commit -m "chore: update market data $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+          git push
