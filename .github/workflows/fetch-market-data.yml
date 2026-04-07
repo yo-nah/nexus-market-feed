@@ -21,7 +21,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install yfinance
 
       - name: Fetch market data
         run: python fetch_market_data.py
